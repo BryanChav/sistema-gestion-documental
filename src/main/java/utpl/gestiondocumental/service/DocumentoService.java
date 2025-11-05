@@ -50,6 +50,8 @@ public class DocumentoService {
         return documentoRepository.save(doc);
     }
 
+    
+    
     // Listar todos los documentos
     public List<Documento> listarDocumentos() {
         return documentoRepository.findAll();

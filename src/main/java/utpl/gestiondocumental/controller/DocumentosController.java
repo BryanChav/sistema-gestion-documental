@@ -1,9 +1,14 @@
 package utpl.gestiondocumental.controller;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +56,19 @@ public class DocumentosController {
     @GetMapping("/{id}")
     public ResponseEntity<Documento> obtenerDocumento(@PathVariable Long id) {
         return ResponseEntity.ok(documentoService.obtenerPorId(id));
+    }
+    
+    @GetMapping("/documentos/descargar/{id}")
+    public ResponseEntity<Resource> descargarDocumento(@PathVariable Long id) throws Exception {
+        Documento doc = documentoService.obtenerPorId(id);
+        Path rutaArchivo = Paths.get(doc.getRutaArchivo());
+
+        Resource resource = new UrlResource(rutaArchivo.toUri());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(doc.getTipo()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getNombre() + "\"")
+                .body(resource);
     }
 
     @PutMapping("/{id}")
