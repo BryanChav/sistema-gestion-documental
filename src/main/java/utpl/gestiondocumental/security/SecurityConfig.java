@@ -37,7 +37,7 @@ public class SecurityConfig {
                         // endpoints de autenticación libres
                         .requestMatchers("/api/auth/**").permitAll()
                         // endpoints de Swagger libres
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs.yaml","/login","/layout","/dashboard", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs.yaml","/login","/layout","/dashboard", "/assets/**","/vendor/**","/css/**", "/js/**","/img/**").permitAll()
                         // resto requiere JWT
                         .anyRequest().authenticated()
                 )

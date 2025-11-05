@@ -1,11 +1,16 @@
 package utpl.gestiondocumental.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +25,7 @@ import utpl.gestiondocumental.security.CustomUserDetailsService;
 import utpl.gestiondocumental.security.JwtUtil;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -42,11 +48,24 @@ public class AuthController {
     // 1️⃣ Registro de usuario
     // --------------------------
     @PostMapping("/register")
-    public Usuario register(@RequestBody Usuario user) {
-        // Hashear password
+    public ResponseEntity<?> register(@RequestBody Usuario user) {
+    	if (userRepository.existsByUsername(user.getUsername())) {
+            // Devolver JSON con la propiedad "message"
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "El nombre de usuario ya existe");
+            return ResponseEntity
+                    .badRequest()
+                    .body(response);
+        }
+
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        Usuario nuevoUsuario = userRepository.save(user);
+        nuevoUsuario.setPassword(null); // no devolver contraseña
+
+        return ResponseEntity.ok(nuevoUsuario);
     }
+       
 
     // --------------------------
     // 2️⃣ Login → devuelve JWT

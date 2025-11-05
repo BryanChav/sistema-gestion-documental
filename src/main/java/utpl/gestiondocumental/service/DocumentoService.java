@@ -19,7 +19,7 @@ public class DocumentoService {
     private DocumentoRepository documentoRepository;
 
     // Carpeta donde se guardarán los archivos
-    private final String UPLOAD_DIR = "uploads/";
+    private final String UPLOAD_DIR = "C:/DocumentosSistema/";
 
     // Subir documento
     public Documento subirDocumento(MultipartFile archivo, String titulo, String descripcion,

@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import utpl.gestiondocumental.model.Documento;
 import utpl.gestiondocumental.service.DocumentoService;
 
@@ -18,7 +22,15 @@ public class DocumentosController {
     @Autowired
     private DocumentoService documentoService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+        summary = "Subir un documento",
+        description = "Permite subir un archivo con su título, descripción y otros metadatos."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Documento subido correctamente"),
+        @ApiResponse(responseCode = "400", description = "Error en la subida del documento")
+    })
     public ResponseEntity<Documento> subirDocumento(
             @RequestParam("archivo") MultipartFile archivo,
             @RequestParam("titulo") String titulo,
