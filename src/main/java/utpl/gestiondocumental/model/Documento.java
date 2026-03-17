@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Documento {
@@ -13,42 +15,55 @@ public class Documento {
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
-	    private String nombre;
-	    private String tipo;              // PDF, Word, Imagen
-	    private String origen;            // INTERNO / EXTERNO
+	    private String tipo;
+	    private String titulo;
+	    private String nombreArchivo;              // PDF, Word, Imagen
 	    private String descripcion;
-	    private Long tamaño;
-	    private String extension;
-	    private String estado;            // activo, inactivo, borrador
-	    private LocalDateTime fecha;
+	    private Long tamaño;          // activo, inactivo, borrador
+	    private LocalDateTime fechaRegistro;
 	    private LocalDateTime fechaModificacion;
 	    private String rutaArchivo;
-	    private Long usuarioId;           // creador o recepcionista
-	    private Long categoriaId;         // opcional
 	    private Boolean activo = true;    // para soft delete
+	 // FK hacia Categoria
+	    @ManyToOne
+	    @JoinColumn(name = "categoria_id")
+	    private Categoria categoria;
+	    
+	 // FK -> estado_documento
+	    @ManyToOne
+	    @JoinColumn(name = "id_estado")
+	    private EstadoDocumento estadoDocumento;
+	    
+	    // FK -> usuarios
+	    @ManyToOne
+	    @JoinColumn(name = "usuario_id")
+	    private Usuario usuario;
+	    
 		public Long getId() {
 			return id;
 		}
 		public void setId(Long id) {
 			this.id = id;
 		}
-		public String getNombre() {
-			return nombre;
+		
+		
+		public String getTitulo() {
+			return titulo;
 		}
-		public void setNombre(String nombre) {
-			this.nombre = nombre;
+		public void setTitulo(String titulo) {
+			this.titulo = titulo;
 		}
-		public String getTipo() {
-			return tipo;
+		public String getNombreArchivo() {
+			return nombreArchivo;
 		}
-		public void setTipo(String tipo) {
-			this.tipo = tipo;
+		public void setNombreArchivo(String nombreArchivo) {
+			this.nombreArchivo = nombreArchivo;
 		}
-		public String getOrigen() {
-			return origen;
+		public LocalDateTime getFechaRegistro() {
+			return fechaRegistro;
 		}
-		public void setOrigen(String origen) {
-			this.origen = origen;
+		public void setFechaRegistro(LocalDateTime fechaRegistro) {
+			this.fechaRegistro = fechaRegistro;
 		}
 		public String getDescripcion() {
 			return descripcion;
@@ -62,23 +77,14 @@ public class Documento {
 		public void setTamaño(Long tamaño) {
 			this.tamaño = tamaño;
 		}
-		public String getExtension() {
-			return extension;
+		
+	
+		
+		public String getTipo() {
+			return tipo;
 		}
-		public void setExtension(String extension) {
-			this.extension = extension;
-		}
-		public String getEstado() {
-			return estado;
-		}
-		public void setEstado(String estado) {
-			this.estado = estado;
-		}
-		public LocalDateTime getFecha() {
-			return fecha;
-		}
-		public void setFecha(LocalDateTime fecha) {
-			this.fecha = fecha;
+		public void setTipo(String tipo) {
+			this.tipo = tipo;
 		}
 		public LocalDateTime getFechaModificacion() {
 			return fechaModificacion;
@@ -92,25 +98,34 @@ public class Documento {
 		public void setRutaArchivo(String rutaArchivo) {
 			this.rutaArchivo = rutaArchivo;
 		}
-		public Long getUsuarioId() {
-			return usuarioId;
-		}
-		public void setUsuarioId(Long usuarioId) {
-			this.usuarioId = usuarioId;
-		}
-		public Long getCategoriaId() {
-			return categoriaId;
-		}
-		public void setCategoriaId(Long categoriaId) {
-			this.categoriaId = categoriaId;
-		}
+		
+		
 		public Boolean getActivo() {
 			return activo;
 		}
 		public void setActivo(Boolean activo) {
 			this.activo = activo;
 		}
-
+		public Categoria getCategoria() {
+			return categoria;
+		}
+		public void setCategoria(Categoria categoria) {
+			this.categoria = categoria;
+		}
+		public EstadoDocumento getEstadoDocumento() {
+			return estadoDocumento;
+		}
+		public void setEstadoDocumento(EstadoDocumento estadoDocumento) {
+			this.estadoDocumento = estadoDocumento;
+		}
+		public Usuario getUsuario() {
+			return usuario;
+		}
+		public void setUsuario(Usuario usuario) {
+			this.usuario = usuario;
+		}
+		
+	
 	   
 	}
 

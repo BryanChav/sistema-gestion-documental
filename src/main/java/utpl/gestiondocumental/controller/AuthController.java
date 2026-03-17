@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import utpl.gestiondocumental.dto.LoginRequest;
+import utpl.gestiondocumental.model.Rol;
 import utpl.gestiondocumental.model.Usuario;
+import utpl.gestiondocumental.repository.RolRepository;
 import utpl.gestiondocumental.repository.UsuarioRepository;
 import utpl.gestiondocumental.security.CustomUserDetailsService;
 import utpl.gestiondocumental.security.JwtUtil;
@@ -40,6 +42,10 @@ public class AuthController {
 
     @Autowired
     private UsuarioRepository userRepository;
+    
+    @Autowired
+    private RolRepository rolRepository;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -57,8 +63,13 @@ public class AuthController {
                     .badRequest()
                     .body(response);
         }
+    	
+    	Rol rolUser = rolRepository.findById(2L)
+                .orElseThrow(() -> new RuntimeException("Rol USER no existe"));
 
-
+        user.setRol(rolUser);                 // ✅ evita NULL
+        user.setEstado(true);                 // ✅ estado por defecto
+    	
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Usuario nuevoUsuario = userRepository.save(user);
         nuevoUsuario.setPassword(null); // no devolver contraseña

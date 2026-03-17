@@ -11,7 +11,8 @@ import utpl.gestiondocumental.service.CategoriaService;
 
 @RestController
 @RequestMapping("/api/categorias")
-public class CategoriasController {
+public class CategoriaController {
+	  
 
     @Autowired
     private CategoriaService categoriaService;
@@ -41,4 +42,5 @@ public class CategoriasController {
         categoriaService.eliminarCategoria(id);
         return ResponseEntity.noContent().build();
     }
+   
 }

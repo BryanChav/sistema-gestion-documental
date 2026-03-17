@@ -6,12 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import utpl.gestiondocumental.model.Rol;
 import utpl.gestiondocumental.model.Usuario;
+import utpl.gestiondocumental.repository.RolRepository;
 import utpl.gestiondocumental.service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuariosController {
+	
+	@Autowired
+    private RolRepository rolRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -28,7 +33,12 @@ public class UsuariosController {
 
     @PostMapping
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.saveUsuario(usuario));
+    	Rol rolUser = rolRepository.findById(2L)
+                .orElseThrow(() -> new RuntimeException("Rol USER no existe"));
+
+    	usuario.setEstado(true);
+        usuario.setRol(rolUser);
+    	return ResponseEntity.ok(usuarioService.saveUsuario(usuario));
     }
 
     @PutMapping("/{id}")
